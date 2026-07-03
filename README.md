@@ -10,6 +10,7 @@ the IP doesn't.
 |---|---|---|
 | [wafer-defect-classifier](https://github.com/ALEX8642/wafer-defect-classifier) | 9-class wafer-map defect classification on WM-811K — focal loss + CBAM attention, temperature-scaled calibration, Grad-CAM++ localization, cost-of-quality analysis, one-click Gradio demo | test macro-F1 **0.92** |
 | [wafer-ssl](https://github.com/ALEX8642/wafer-ssl) | SimCLR self-supervised pretraining on 638k unlabeled maps + 4-seed ensemble, with a controlled ablation attributing the gain | test macro-F1 **0.94** |
+| [wafer-mixed](https://github.com/ALEX8642/wafer-mixed) | Multi-label classification of *mixed* (superposed) defect patterns on MixedWM38, a transfer study showing pretrained init pays only in the low-data regime (+8.8 F1 pts at 1 % data), and per-label thresholds cutting escapes 36 % at a 10:1 cost ratio | test macro-F1 **0.98** |
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/gradcam_scratch.png" width="32%" alt="Grad-CAM localizing a scratch defect"/>
@@ -37,9 +38,6 @@ the IP doesn't.
 
 ### In progress
 
-- **wafer-mixed** — robustness study on MixedWM38: multi-label classification of
-  mixed (superposed) defect patterns, plus a transfer study from the WM-811K
-  backbones.
 - **Root-cause analytics** — classifier outputs joined to a simulated MES/SQL
   schema for spatial-signature → tool attribution.
 - **Deployment & drift monitoring** — model serving with input-drift detection
