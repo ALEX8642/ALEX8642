@@ -11,6 +11,7 @@ the IP doesn't.
 | [wafer-defect-classifier](https://github.com/ALEX8642/wafer-defect-classifier) | 9-class wafer-map defect classification on WM-811K — focal loss + CBAM attention, temperature-scaled calibration, Grad-CAM++ localization, cost-of-quality analysis, one-click Gradio demo | test macro-F1 **0.92** |
 | [wafer-ssl](https://github.com/ALEX8642/wafer-ssl) | SimCLR self-supervised pretraining on 638k unlabeled maps + 4-seed ensemble, with a controlled ablation attributing the gain | test macro-F1 **0.94** |
 | [wafer-mixed](https://github.com/ALEX8642/wafer-mixed) | Multi-label classification of *mixed* (superposed) defect patterns on MixedWM38, a transfer study showing pretrained init pays only in the low-data regime (+8.8 F1 pts at 1 % data), and per-label thresholds cutting escapes 36 % at a 10:1 cost ratio | test macro-F1 **0.98** |
+| [wafer-rootcause](https://github.com/ALEX8642/wafer-rootcause) | SQL-first root-cause attribution — a simulated MES schema (DuckDB) joined to wafer-mixed's classifier outputs, recovering planted equipment faults by chamber-vs-step commonality analysis (two-proportion z-tests + Benjamini–Hochberg FDR, window localization); scored, with a classifier-noise ablation that lands a reported null | attribution precision@1 **~0.9–1.0**, recall 0.48±0.30 |
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/gradcam_scratch.png" width="32%" alt="Grad-CAM localizing a scratch defect"/>
@@ -38,8 +39,6 @@ the IP doesn't.
 
 ### In progress
 
-- **Root-cause analytics** — classifier outputs joined to a simulated MES/SQL
-  schema for spatial-signature → tool attribution.
 - **Deployment & drift monitoring** — model serving with input-drift detection
   and calibration-decay tracking.
 
