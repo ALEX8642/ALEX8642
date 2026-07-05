@@ -12,6 +12,7 @@ the IP doesn't.
 | [wafer-ssl](https://github.com/ALEX8642/wafer-ssl) | SimCLR self-supervised pretraining on 638k unlabeled maps + 4-seed ensemble, with a controlled ablation attributing the gain | test macro-F1 **0.94** |
 | [wafer-mixed](https://github.com/ALEX8642/wafer-mixed) | Multi-label classification of *mixed* (superposed) defect patterns on MixedWM38, a transfer study showing pretrained init pays only in the low-data regime (+8.8 F1 pts at 1 % data), and per-label thresholds cutting escapes 36 % at a 10:1 cost ratio | test macro-F1 **0.98** |
 | [wafer-rootcause](https://github.com/ALEX8642/wafer-rootcause) | SQL-first root-cause attribution — a simulated MES schema (DuckDB) joined to wafer-mixed's classifier outputs, recovering planted equipment faults by chamber-vs-step commonality analysis (two-proportion z-tests + Benjamini–Hochberg FDR, window localization); scored, with a classifier-noise ablation that lands a reported null | attribution precision@1 **~0.9–1.0**, recall 0.48±0.30 |
+| [wafer-deploy](https://github.com/ALEX8642/wafer-deploy) | Model serving + drift monitoring — FastAPI serving of the calibrated wafer-mixed model with an unsupervised-first drift stack (embedding-MMD, prediction-PSI, calibration-ECE) and a hysteresis retrain trigger; scored on a synthetic corruption sweep + a real WM-811K→MixedWM38 cross-domain shift, self-contained Prometheus+Grafana | covariate monitor leads every shift; WM-811K cross-domain recall **45.6 %**; no-drift trigger **FA none @ intensity 0** |
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/gradcam_scratch.png" width="32%" alt="Grad-CAM localizing a scratch defect"/>
@@ -36,11 +37,6 @@ the IP doesn't.
   the process signature a quality engineer would recognize — edge-ring
   uniformity effects, scratch arcs, center chuck marks — with a defect-class →
   process-failure-mode mapping in the docs.
-
-### In progress
-
-- **Deployment & drift monitoring** — model serving with input-drift detection
-  and calibration-decay tracking.
 
 ### Also here
 
