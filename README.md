@@ -11,7 +11,7 @@ constraints and acceptance criteria, then review, test, deploy and operate what 
 
 | Repo | What it shows |
 |---|---|
-| [onprem-llm-stack](https://github.com/ALEX8642/onprem-llm-stack) | Two NVIDIA GB10 nodes serving large quantized models (MiniMax M2.7, Qwen3.5-122B, Qwen3.8-Flash-Next) tensor-parallel on vLLM / SGLang / Atlas, behind a LiteLLM gateway and OpenWebUI with SSO. Includes an A/B evaluation harness that caught a faster recipe failing long-context retrieval, a watchdog for a silent NaN-logits fault (detect → contain → correct → escalate), and an Ansible rebuild with a written DR runbook |
+| [onprem-llm-stack](https://github.com/ALEX8642/onprem-llm-stack) | Two NVIDIA GB10 nodes serving large quantized models (MiniMax M2.7, Qwen3.5-122B, Qwen3.8-Flash-Next) tensor-parallel on vLLM / SGLang / Atlas, behind a LiteLLM gateway and OpenWebUI with SSO. Includes an A/B evaluation harness that caught a faster recipe failing long-context retrieval, a watchdog for a silent NaN-logits fault (detect → contain → correct → escalate), an Ansible rebuild with a written DR runbook, a measured trial of Cohere Command A+ (218B MoE, TP=2), and a tool-call eval of the Home Assistant voice agent |
 | [audio2report](https://github.com/ALEX8642/audio2report) | Dual-mic meeting recordings → deduplicated transcript → LLM audit report, fully local (WhisperX, pluggable local LLM backends, CPU/GPU Docker images, CI) |
 | [LLM-chatbot](https://github.com/ALEX8642/LLM-chatbot) | RAG over PDF manuals: hybrid retrieval (Qdrant dense + OpenSearch BM25, reciprocal-rank fusion) and cross-encoder reranking, with Cohere Command R7B via Ollama and page-level citations |
 
