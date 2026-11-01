@@ -1,46 +1,29 @@
 # Alexander Feht
 
-Manufacturing & supplier-quality engineer building hands-on ML for semiconductor
-quality problems. Everything below is built on public data — the methods travel,
-the IP doesn't.
+Quality engineer (ASQ-CQE, 15+ years in regulated hardware manufacturing) who deploys and operates
+private LLM infrastructure: multi-node serving, evaluation gates, silent-failure monitoring and
+disaster recovery, run with the same discipline as a production line.
 
-## Semiconductor ML portfolio
+I build with AI coding agents (Claude Code, Codex, GitHub Copilot CLI). I set the architecture,
+constraints and acceptance criteria, then review, test, deploy and operate what they write.
+
+## On-prem LLM deployment & evaluation
+
+| Repo | What it shows |
+|---|---|
+| [onprem-llm-stack](https://github.com/ALEX8642/onprem-llm-stack) | Two NVIDIA GB10 nodes serving large quantized models (MiniMax M2.7, Qwen3.5-122B, Qwen3.8-Flash-Next) tensor-parallel on vLLM / SGLang / Atlas, behind a LiteLLM gateway and OpenWebUI with SSO. Includes an A/B evaluation harness that caught a faster recipe failing long-context retrieval, a watchdog for a silent NaN-logits fault (detect → contain → correct → escalate), and an Ansible rebuild with a written DR runbook |
+| [audio2report](https://github.com/ALEX8642/audio2report) | Dual-mic meeting recordings → deduplicated transcript → LLM audit report, fully local (WhisperX, pluggable local LLM backends, CPU/GPU Docker images, CI) |
+| [LLM-chatbot](https://github.com/ALEX8642/LLM-chatbot) | RAG over PDF manuals: hybrid retrieval (Qdrant dense + OpenSearch BM25, reciprocal-rank fusion) and cross-encoder reranking, with Cohere Command R7B via Ollama and page-level citations |
+
+## ML lifecycle on public data
 
 | Repo | What it shows | Headline |
 |---|---|---|
-| [wafer-defect-classifier](https://github.com/ALEX8642/wafer-defect-classifier) | 9-class wafer-map defect classification on WM-811K — focal loss + CBAM attention, temperature-scaled calibration, Grad-CAM++ localization, cost-of-quality analysis, one-click Gradio demo | test macro-F1 **0.92** |
-| [wafer-ssl](https://github.com/ALEX8642/wafer-ssl) | SimCLR self-supervised pretraining on 638k unlabeled maps + 4-seed ensemble, with a controlled ablation attributing the gain | test macro-F1 **0.94** |
-| [wafer-mixed](https://github.com/ALEX8642/wafer-mixed) | Multi-label classification of *mixed* (superposed) defect patterns on MixedWM38, a transfer study showing pretrained init pays only in the low-data regime (+8.8 F1 pts at 1 % data), and per-label thresholds cutting escapes 36 % at a 10:1 cost ratio | test macro-F1 **0.98** |
-| [wafer-rootcause](https://github.com/ALEX8642/wafer-rootcause) | SQL-first root-cause attribution — a simulated MES schema (DuckDB) joined to wafer-mixed's classifier outputs, recovering planted equipment faults by chamber-vs-step commonality analysis (two-proportion z-tests + Benjamini–Hochberg FDR, window localization); scored, with a classifier-noise ablation that lands a reported null | attribution precision@1 **~0.9–1.0**, recall 0.48±0.30 |
-| [wafer-deploy](https://github.com/ALEX8642/wafer-deploy) | Model serving + drift monitoring — FastAPI serving of the calibrated wafer-mixed model with an unsupervised-first drift stack (embedding-MMD, prediction-PSI, calibration-ECE) and a hysteresis retrain trigger; scored on a synthetic corruption sweep + a real WM-811K→MixedWM38 cross-domain shift, self-contained Prometheus+Grafana | covariate monitor leads every shift; WM-811K cross-domain recall **45.6 %**; no-drift trigger **FA none @ intensity 0** |
+| [wafer-defect-classifier](https://github.com/ALEX8642/wafer-defect-classifier) | 9-class WM-811K wafer maps: focal loss + CBAM, temperature-scaled calibration, Grad-CAM++ | macro-F1 **0.92**, ECE 0.003 |
+| [wafer-ssl](https://github.com/ALEX8642/wafer-ssl) | SimCLR pretraining on 638k unlabeled maps + 4-seed ensemble, with an ablation attributing the gain | macro-F1 **0.94** |
+| [wafer-mixed](https://github.com/ALEX8642/wafer-mixed) | Multi-label mixed-defect classification (MixedWM38), transfer study, cost-weighted per-label thresholds | macro-F1 **0.98** |
+| [wafer-rootcause](https://github.com/ALEX8642/wafer-rootcause) | Simulated MES in DuckDB; SQL commonality analysis (z-tests + BH-FDR) recovers planted equipment faults | precision@1 **~0.9–1.0** |
+| [wafer-deploy](https://github.com/ALEX8642/wafer-deploy) | FastAPI serving with a bit-for-bit parity test, three drift monitors, hysteresis retrain trigger, Prometheus + Grafana | scored detection latency and false-alarm rate |
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/gradcam_scratch.png" width="32%" alt="Grad-CAM localizing a scratch defect"/>
-  <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/gradcam_edge_ring.png" width="32%" alt="Grad-CAM localizing an edge-ring defect"/>
-  <img src="https://raw.githubusercontent.com/ALEX8642/wafer-defect-classifier/master/assets/reliability_diagram.png" width="32%" alt="Reliability diagram after temperature scaling"/>
-</p>
-
-### How I work — the part the numbers don't show
-
-- **Honest numbers over headline numbers.** Negative results stay in the docs:
-  pseudo-labeling regressed the tail classes and was rolled back; a
-  focal-loss/class-weights interaction bug is written up as a post-mortem, not
-  hidden.
-- **Operating points over accuracy.** Escapes and false alarms are priced
-  separately (10:1 cost ratio); per-class thresholds move along that trade-off
-  curve, and calibration (ECE 0.016 → 0.003) makes confidence something you can
-  route on.
-- **Attribution over vibes.** The self-supervised result ships with a
-  from-scratch ensemble control: +1.8pp from ensembling, +0.8pp from
-  pretraining — measured, not assumed.
-- **Explainability a fab can use.** Grad-CAM++ overlays tie each prediction to
-  the process signature a quality engineer would recognize — edge-ring
-  uniformity effects, scratch arcs, center chuck marks — with a defect-class →
-  process-failure-mode mapping in the docs.
-
-### Also here
-
-Local-first LLM infrastructure: [audio2report](https://github.com/ALEX8642/audio2report)
-(meeting audio → deduplicated transcripts → audit reports, fully offline) and
-[LLM-chatbot](https://github.com/ALEX8642/LLM-chatbot) (RAG over technical
-manuals with Haystack + Ollama).
+Negative results stay in the docs. For example, a pseudo-labeling regression was rolled back and a
+loss-function bug is written up as a post-mortem.
